@@ -166,3 +166,74 @@ function reduceAce (sum, numberOfAces) {
     }
     return sum;
 }
+
+function moveNextTurn () {
+    let cardsLeft = cards.length;
+    // console.log(cardsLeft); 
+    if (cardsLeft > 7) {
+        playerSum = 0;
+        dealerSum = 0;
+        // playerHand = [];
+        // dealerHand = [];
+        playerAces = 0;
+        dealerAces = 0;
+        canHit = true;
+        nextTurn = false;
+        document.getElementById("StayButton").disabled = false;
+        discardedCards.push(hidden);
+        dealerHand.shift(hidden); // This is the line just added to remove hidden card from previous turn from dealer's hand array
+        document.getElementById("HiddenCard").remove(); // This is an issue, you need to remove the hidden card after it is flipped
+        document.getElementById("DealerHand").innerText = "Dealer Hand:"; // Maybe you can target the parentDiv element and remove it's
+        document.getElementById("PlayerHand").innerText = "Player Hand:"; // child nodes?
+        document.getElementById("GameResult").innerText = "Game Result";
+        let HiddenCard = document.createElement("img");
+        HiddenCard.setAttribute('id', "HiddenCard");
+        HiddenCard.src = "./cards/BACK.png";
+        for (var i = 0; i < dealerHand.length; i++) {
+            discardedCards.push(dealerHand[i]);
+            dealerHand.pop(dealerHand[i]);
+        }
+        for (var j = 0; j < playerHand.length; j++) {
+            discardedCards.push(playerHand[j]);
+            playerHand.pop(playerHand[j]);
+        }
+        let parentDealerCardsDiv = document.getElementById("DealerCardsShow");
+        let dealerUsed = parentDealerCardsDiv.children;
+        console.log(dealerUsed); // Remember to check for junk artifacts to see if the 
+        while (parentDealerCardsDiv.hasChildNodes()) { // child node element is <img>!
+            for (var k = dealerUsed.length - 1; k >= 0; k--) {
+                if (dealerUsed[k].nodeName.toLowerCase() === "img") {
+                    parentDealerCardsDiv.removeChild(dealerUsed[k]);
+                }
+            }
+            break;
+        }
+        let parentPlayerCardsDiv = document.getElementById("PlayerCardsShow");
+        let playerUsed = parentPlayerCardsDiv.children;
+        // console.log(playerUsed.length);
+        while (parentPlayerCardsDiv.hasChildNodes()) {
+            for (var l = playerUsed.length - 1; l >= 0; l--) {
+                if (playerUsed[l].nodeName.toLowerCase() === "img") {
+                    parentPlayerCardsDiv.removeChild(playerUsed[l]);
+                }
+            }
+            break;
+        }
+        }
+        // console.log(discardedCards);
+    startGame();
+    if (cardsLeft < 7) {
+        window.alert("There are not enough cards left! We will see who the winner is.");
+        if (dealerScore > playerScore) {
+            document.getElementById("RoundResult").innerText = "The dealer is the winner!";
+        }
+        else if (playerScore > dealerScore) {
+            document.getElementById("RoundResult").innerText = "The player is the winner!";
+        }
+        else {
+            document.getElementById("RoundResult").innerText = "The round ends in a tie!";
+        }
+        window.alert(document.getElementById("RoundResult").innerText);
+        window.alert("Please refresh the screen to start a new game!");
+    }
+}
