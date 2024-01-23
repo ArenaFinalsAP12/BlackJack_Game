@@ -96,16 +96,20 @@ function stay() {
 }
 */
 function getValue(card, hand) {
-    for(card in cards) { // two separate functions, one for dealer and one for player?
+    for(card in hand) { // two separate functions, one for dealer and one for player?
         let cardrealValue; 
         cardValue = card.split("-"); // Remember that this returns an array 
         cardfirstDigit = cardValue[0]; 
             if(cardfirstDigit == "J" || cardfirstDigit == "Q" || cardfirstDigit == "K") {
                 cardrealValue = 10; 
             }
+            if(cardfirstDigit == "A") {
+                cardrealValue = 11; 
+            }
             else if(!cardfirstDigit == "J" || cardfirstDigit == "Q" || cardfirstDigit == "K"){
                 cardrealValue = parseInt(cardfirstDigit); 
             }
+            console.log(typeof(cardrealValue)); 
         hand+= cardrealValue; 
         return hand; 
     }
