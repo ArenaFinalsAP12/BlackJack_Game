@@ -4,7 +4,7 @@
 var hidden;
 
 var canHit = true; 
-var nextTurn = false;
+var nextTurn = false; // Don't know if you need this flag now?
 
 var playerScore = 0;
 var dealerScore = 0;
@@ -58,15 +58,14 @@ function startGame () {
     dealerAces += checkIfAce(hidden);
     while (dealerSum < 17) {
         let dealerCardImg = document.createElement("img"); // <img src="./cards/4-C.png">
-        dealerCardImg.setAttribute('id', "dealerCardsFaceup"); // Not sure if this will interfere with creating 
+        // dealerCardImg.setAttribute('id', "dealerCards") // Not sure if this will interfere with creating 
         let dealerCard = cards.pop();                          // new dealer cards
         dealerHand.push(dealerCard);
-        console.log(dealerHand); // It seems like it won't remove the first hidden from dealerHand array?
-        dealerCardImg.src = "./cards/" + dealerCard + ".png";
+        dealerCardImg.src = "./cards/" + dealerCard + ".png"; 
         dealerSum += getValue(dealerCard);
         dealerAces += checkIfAce(dealerCard);
         document.getElementById("DealerCardsShow").appendChild(dealerCardImg);
-        console.log(document.getElementById("DealerCardsShow").childNodes);
+        // console.log(document.getElementById("DealerCardsShow").children);
     }
     for (var i = 0; i < 2; i++) {
         let playerCardImg = document.createElement("img");
@@ -177,8 +176,6 @@ function moveNextTurn () {
         canHit = true;
         nextTurn = false;
         document.getElementById("StayButton").disabled = false;
-        discardedCards.push(hidden);
-        dealerHand.shift(hidden); // This is the line just added to remove hidden card from previous turn from dealer's hand array
         document.getElementById("HiddenCard").remove(); // This is an issue, you need to remove the hidden card after it is flipped
         document.getElementById("DealerHand").innerText = "Dealer Hand:"; // Maybe you can target the parentDiv element and remove it's
         document.getElementById("PlayerHand").innerText = "Player Hand:"; // child nodes?
@@ -186,17 +183,17 @@ function moveNextTurn () {
         let HiddenCard = document.createElement("img");
         HiddenCard.setAttribute('id', "HiddenCard");
         HiddenCard.src = "./cards/BACK.png";
-        for (var i = 0; i < dealerHand.length; i++) {
+        for (var i = dealerHand.length - 1; i >=0 ; i--) {// Needed to reverse this from incrementing to
+            dealerHand.pop(dealerHand[i]); // to decrementing to remove all previous cards
             discardedCards.push(dealerHand[i]);
-            dealerHand.pop(dealerHand[i]);
         }
-        for (var j = 0; j < playerHand.length; j++) {
-            discardedCards.push(playerHand[j]);
+        for (var j = 0; j <= playerHand.length; j++) {
             playerHand.pop(playerHand[j]);
+            discardedCards.push(playerHand[j]);
         }
         let parentDealerCardsDiv = document.getElementById("DealerCardsShow");
         let dealerUsed = parentDealerCardsDiv.children;
-        console.log(dealerUsed); // Remember to check for junk artifacts to see if the 
+        // console.log(dealerUsed); // Remember to check for junk artifacts to see if the 
         while (parentDealerCardsDiv.hasChildNodes()) { // child node element is <img>!
             for (var k = dealerUsed.length - 1; k >= 0; k--) {
                 if (dealerUsed[k].nodeName.toLowerCase() === "img") {
