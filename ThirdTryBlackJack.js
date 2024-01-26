@@ -3,8 +3,7 @@
 
 var hidden;
 
-var canHit = true; 
-var nextTurn = false; // Don't know if you need this flag now?
+var canHit = true;
 
 var playerScore = 0;
 var dealerScore = 0;
@@ -22,7 +21,7 @@ var nextGameBtn = document.getElementById("NewGameButton");
 let discardedCards = [];
 // Remember that the YouTube tutorial uses window.onload() = function()
 createDeck();
-shuffleDeck(cards); // This line is the current issue!!
+shuffleDeck(cards);
 startGame();
 
 function createDeck () {
@@ -31,7 +30,7 @@ function createDeck () {
     let suits = ["C", "D", "H", "S"];
     for (var i = 0; i < values.length; i++) {
         for (var j = 0; j < suits.length; j++) {
-            cards.push(values[i] + "-" + suits[j]); // Don't know if ".png" is necessary
+            cards.push(values[i] + "-" + suits[j]);
         }
     }
     return cards;
@@ -65,7 +64,6 @@ function startGame () {
         dealerSum += getValue(dealerCard);
         dealerAces += checkIfAce(dealerCard);
         document.getElementById("DealerCardsShow").appendChild(dealerCardImg);
-        // console.log(document.getElementById("DealerCardsShow").children);
     }
     for (var i = 0; i < 2; i++) {
         let playerCardImg = document.createElement("img");
@@ -130,7 +128,6 @@ function stay () {
     else {
         document.getElementById("GameResult").innerText = "The game ends in a tie!";
     }
-    nextTurn = true;
     nextGameBtn.disabled = false;
 }
 
@@ -174,7 +171,6 @@ function moveNextTurn () {
         playerAces = 0;
         dealerAces = 0;
         canHit = true;
-        nextTurn = false;
         document.getElementById("StayButton").disabled = false;
         document.getElementById("HiddenCard").remove(); // This is an issue, you need to remove the hidden card after it is flipped
         document.getElementById("DealerHand").innerText = "Dealer Hand:"; // Maybe you can target the parentDiv element and remove it's
@@ -183,18 +179,17 @@ function moveNextTurn () {
         let HiddenCard = document.createElement("img");
         HiddenCard.setAttribute('id', "HiddenCard");
         HiddenCard.src = "./cards/BACK.png";
-        for (var i = dealerHand.length - 1; i >=0 ; i--) {// Needed to reverse this from incrementing to
+        for (var i = dealerHand.length - 1; i >= 0 ; i--) {// Needed to reverse this from incrementing to
             dealerHand.pop(dealerHand[i]); // to decrementing to remove all previous cards
             discardedCards.push(dealerHand[i]);
         }
-        for (var j = 0; j <= playerHand.length; j++) {
+        for (var j = playerHand.length - 1; j >= 0; j--) {
             playerHand.pop(playerHand[j]);
             discardedCards.push(playerHand[j]);
         }
         let parentDealerCardsDiv = document.getElementById("DealerCardsShow");
         let dealerUsed = parentDealerCardsDiv.children;
-        // console.log(dealerUsed); // Remember to check for junk artifacts to see if the 
-        while (parentDealerCardsDiv.hasChildNodes()) { // child node element is <img>!
+        while (parentDealerCardsDiv.hasChildNodes()) { 
             for (var k = dealerUsed.length - 1; k >= 0; k--) {
                 if (dealerUsed[k].nodeName.toLowerCase() === "img") {
                     parentDealerCardsDiv.removeChild(dealerUsed[k]);
@@ -212,9 +207,9 @@ function moveNextTurn () {
             }
             break;
         }
-        }
-    startGame();
-    if (cardsLeft < 7) {
+        startGame();
+    }
+    if (cardsLeft <= 7) {
         window.alert("There are not enough cards left! We will see who the winner is.");
         if (dealerScore > playerScore) {
             document.getElementById("RoundResult").innerText = "The dealer is the winner!";
