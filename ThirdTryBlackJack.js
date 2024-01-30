@@ -92,14 +92,14 @@ function hit () {
     playerAces += checkIfAce(playerCard);
     document.getElementById("PlayerCardsShow").appendChild(playerCardImg);
 
-    if (reduceAce(playerSum, playerAces) >= 21) { // A, J, K => 21 
+    if (increaseAce(playerSum, playerAces) >= 21) { // A, J, K => 21 
         canHit = false;
     }
 }
 
 function stay () {
-    playerSum = reduceAce(playerSum, playerAces);
-    dealerSum = reduceAce(dealerSum, dealerAces);
+    playerSum = increaseAce(playerSum, playerAces);
+    dealerSum = increaseAce(dealerSum, dealerAces);
     document.getElementById("StayButton").disabled = true;
     canHit = false;
     document.getElementById("HiddenCard").src = "./cards/" + hidden + ".png";
@@ -137,7 +137,7 @@ function getValue (card) {
     if (cardValuePlace[1] === "-") { // should be A, 1, 5, J, K etc. 
         if (isNaN(cardValuePlace[0])) { // Sometimes leads to error when cards run out, Cannot read properties
             if (cardValuePlace[0] === "A") { // of undefined (reading 'slice')
-                return 11;
+                return 1;
             }
             return 10;
         }
@@ -156,9 +156,9 @@ function checkIfAce (card) {
     return 0;
 }
 
-function reduceAce (sum, numberOfAces) {
-    while (sum > 21 && numberOfAces > 0) {
-        sum -= 10;
+function increaseAce (sum, numberOfAces) { // Changing the function eliminated the possibility of
+    while (sum <= 11 && numberOfAces > 0) { // the dealer having a soft hand under 17
+        sum += 10;
         numberOfAces -= 1;
     }
     return sum;
