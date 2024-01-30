@@ -1,8 +1,6 @@
 // This is my third attempt to create a BlackJack Game
-// Maybe find out why the canHit flag works?
 
 var hidden;
-
 var canHit = true;
 
 var playerScore = 0;
@@ -17,6 +15,7 @@ var dealerAces = 0;
 var playerHand = [];
 var dealerHand = [];
 
+var newRoundBtn = document.getElementById("NewRoundButton");
 var nextGameBtn = document.getElementById("NewGameButton");
 let discardedCards = [];
 // Remember that the YouTube tutorial uses window.onload() = function()
@@ -47,6 +46,7 @@ function shuffleDeck (cards) {
 
 function startGame () {
     nextGameBtn.disabled = true;
+    newRoundBtn.disabled = true;
     hidden = cards.pop(); 
     let hiddenCardImg = document.createElement("img");
     hiddenCardImg.src = "./cards/" + "BACK" + ".png";
@@ -74,9 +74,10 @@ function startGame () {
         playerAces += checkIfAce(playerCard);
         document.getElementById("PlayerCardsShow").appendChild(playerCardImg);
     }
-    document.getElementById("HitButton").addEventListener("click", hit); // Not sure why these are within the function and 
-    document.getElementById("StayButton").addEventListener("click", stay); // not in the global scope?
+    document.getElementById("HitButton").addEventListener("click", hit);
+    document.getElementById("StayButton").addEventListener("click", stay); 
     nextGameBtn.addEventListener("click", moveNextTurn);
+    newRoundBtn.addEventListener("click", startOver);
 }
 
 function hit () {
@@ -172,16 +173,16 @@ function moveNextTurn () {
         dealerAces = 0;
         canHit = true;
         document.getElementById("StayButton").disabled = false;
-        document.getElementById("HiddenCard").remove(); // This is an issue, you need to remove the hidden card after it is flipped
-        document.getElementById("DealerHand").innerText = "Dealer Hand:"; // Maybe you can target the parentDiv element and remove it's
-        document.getElementById("PlayerHand").innerText = "Player Hand:"; // child nodes?
+        document.getElementById("HiddenCard").remove(); 
+        document.getElementById("DealerHand").innerText = "Dealer Hand:";
+        document.getElementById("PlayerHand").innerText = "Player Hand:"; 
         document.getElementById("GameResult").innerText = "Game Result";
         let HiddenCard = document.createElement("img");
         HiddenCard.setAttribute('id', "HiddenCard");
         HiddenCard.src = "./cards/BACK.png";
-        for (var i = dealerHand.length - 1; i >= 0 ; i--) {// Needed to reverse this from incrementing to
-            dealerHand.pop(dealerHand[i]); // to decrementing to remove all previous cards
-            discardedCards.push(dealerHand[i]);
+        for (var i = dealerHand.length - 1; i >= 0 ; i--) { // This removes the cards from the previous 
+            dealerHand.pop(dealerHand[i]); // turn from the player/dealer's hands before distributing
+            discardedCards.push(dealerHand[i]); // new cards for the next turn
         }
         for (var j = playerHand.length - 1; j >= 0; j--) {
             playerHand.pop(playerHand[j]);
@@ -189,9 +190,9 @@ function moveNextTurn () {
         }
         let parentDealerCardsDiv = document.getElementById("DealerCardsShow");
         let dealerUsed = parentDealerCardsDiv.children;
-        while (parentDealerCardsDiv.hasChildNodes()) { 
-            for (var k = dealerUsed.length - 1; k >= 0; k--) {
-                if (dealerUsed[k].nodeName.toLowerCase() === "img") {
+        while (parentDealerCardsDiv.hasChildNodes()) { // This removes the img elements of the cards from
+            for (var k = dealerUsed.length - 1; k >= 0; k--) { // the previous turn before distributing
+                if (dealerUsed[k].nodeName.toLowerCase() === "img") { // new cards for the next turn
                     parentDealerCardsDiv.removeChild(dealerUsed[k]);
                 }
             }
@@ -221,6 +222,14 @@ function moveNextTurn () {
             document.getElementById("RoundResult").innerText = "The round ends in a tie!";
         }
         window.alert(document.getElementById("RoundResult").innerText);
-        window.alert("Please refresh the screen to start a new game!");
+        newRoundBtn.disabled = false;
     }
+}
+
+function startOver () {
+    setTimeout(reloadGame, 4000);
+    window.alert("A new round of Blackjack will load shortly!");
+}
+function reloadGame () {
+    window.location.reload(true);
 }
