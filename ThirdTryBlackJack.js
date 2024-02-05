@@ -29,7 +29,7 @@ function createDeck () {
     let suits = ["C", "D", "H", "S"];
     for (var i = 0; i < values.length; i++) {
         for (var j = 0; j < suits.length; j++) {
-            cards.push(values[i] + "-" + suits[j]);
+            cards.push(values[i] + "-" + suits[j])
         }
     }
     return cards;
