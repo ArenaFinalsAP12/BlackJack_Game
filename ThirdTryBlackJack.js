@@ -134,7 +134,7 @@ function stay () {
 
 function getValue (card) {
     let cardValuePlace = card.slice(0, 2); // should be A-, 4-, J-, 10, etc.
-    if (cardValuePlace[1] === "-") { // should be A, 1, 5, J, K etc. 
+    if (cardValuePlace[1] === "-") { // should be A, 5, J, K etc. 
         if (isNaN(cardValuePlace[0])) { // Sometimes leads to error when cards run out, Cannot read properties
             if (cardValuePlace[0] === "A") { // of undefined (reading 'slice')
                 return 1;
